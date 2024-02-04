@@ -11,17 +11,24 @@ const dummy = ['https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?ixl
 const Page = () => {
 
 	// 모바일 환경인지 검사하는 함수
-	const isMobile = () => window.innerHeight> window.innerWidth
+    const [isMobile, setIsMobile] = useState(false);
 
-	function handler() {
-		if (isMobile()) {
-			// 모바일 환경일 때의 처리
-			console.log("모바일 환경입니다.");
-		} else {
-			// 데스크탑 환경일 때의 처리
-			console.log( "데스크탑 환경입니다.");
-		}
-	};
+    // 모바일 환경인지 검사하는 함수를 useEffect 내에서 실행
+    useEffect(() => {
+        const checkIfMobile = () => window.innerHeight > window.innerWidth;
+        setIsMobile(checkIfMobile());
+
+        // 화면 크기가 변경될 때마다 모바일 여부를 다시 검사
+        window.addEventListener('resize', () => setIsMobile(checkIfMobile()));
+
+        // 컴포넌트가 언마운트 될 때 이벤트 리스너 제거
+        return () => window.removeEventListener('resize', () => setIsMobile(checkIfMobile()));
+    }, []);
+
+    useEffect(() => {
+        // 모바일 환경 또는 데스크탑 환경에 따른 처리
+        console.log(isMobile ? "모바일 환경입니다." : "데스크탑 환경입니다.");
+    }, [isMobile]);
 
 	handler();
 	return (
