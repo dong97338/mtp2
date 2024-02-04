@@ -30,7 +30,6 @@ const Page = () => {
     console.log(isMobile ? "모바일 환경입니다." : "데스크탑 환경입니다.");
   }, [isMobile]);
 
-  handler();
   return (
     <Carousel className="h-1/2 w-1/2 rounded-xl">
       {(global.imageUrls || dummy).map((imageUrl, index) => (
