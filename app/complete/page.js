@@ -18,7 +18,7 @@ const Page = () => {
   return (
     <Carousel className="h-1/2 w-1/2 rounded-xl">
       {(global.imageUrls || dummy).map((imageUrl, index) => (
-        <img key={index} src={imageUrl} className="h-full w-full object-cover" />
+        <Image key={index} src={imageUrl} width={640} height={480} className="h-full w-full object-cover" />
       ))}
     </Carousel>
 
