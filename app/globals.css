@@ -18,10 +18,10 @@
 
 body {
 	color: rgb(var(--foreground-rgb));
-	/* background-image: conic-gradient(from 180deg at 50% 50%, #e66465, #9198e5); */
-	background: linear-gradient(to bottom,
+	background: conic-gradient(from 180deg at 50% 50%, #e66465, #9198e5);
+	/* background: linear-gradient(to bottom,
 	transparent,
-	rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+	rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb)); */
 }
 
 @layer utilities {
