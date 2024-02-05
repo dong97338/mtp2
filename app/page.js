@@ -35,7 +35,7 @@ export default function StepperWithContent() {
     router.push('/loading')
     const formData = new FormData();
     formData.append('files', new File([await fetch(imgSrc).then(res => res.blob())], "image.jpg", { type: "image/jpeg" }));
-    ['genre', 'style', 'gender'].forEach((key, i) => formData.append(key, step[i]));
+    ['story', 'gender'].forEach((key, i) => formData.append(key, step[i]));
     const taskId = +(await fetch(url('generateImages/1'), { method: 'POST', body: formData }).then(ret => ret.json())).taskId
     console.log(`taskId: ${taskId}`);
     const intervalId = setInterval(async () => {
@@ -66,7 +66,7 @@ export default function StepperWithContent() {
 
         <div className="w-full px-24 py-4">
           <Stepper activeStep={activeStep} isLastStep={setIsLastStep} isFirstStep={setIsFirstStep}>
-            {[[CameraIcon, "사진"], [PaintBrushIcon, "스타일"], [UserIcon, "성별"]].map(([Icon, str], i) =>
+            {[[CameraIcon, "사진"], [PaintBrushIcon, "스토리"], [UserIcon, "성별"]].map(([Icon, str], i) =>
               <Step key={i} onClick={() => setActiveStep(i)}>
                 <Icon className="h-5 w-5" />
                 <div className="absolute -bottom-[4.5rem] w-max text-center">
