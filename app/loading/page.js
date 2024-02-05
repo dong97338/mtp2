@@ -112,7 +112,7 @@ export default function ProgressLabel() {
 		<>
 			<Spinner className="h-52 w-52" />
 			<Typography variant="h5" color="gray" className="mt-8">
-				{loadingTexts[currentTextIndex % loadingTexts.length] + `${global.step?.[0]} ${global.step?.[1]} ${global.step?.[2]}`}
+				{loadingTexts[currentTextIndex % loadingTexts.length] }
 			</Typography>
 			<Progress value={parseInt(progress)} label="Completed" />;
 		</>
