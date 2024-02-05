@@ -95,11 +95,11 @@ export default function ProgressLabel() {
 	React.useEffect(() => {
 		const timer = setInterval(() => {
 			setProgress((oldProgress) => {
-				if (oldProgress === 100) {
+				if (oldProgress === 36) {
 					return 0;
 				}
-				const diff = Math.random() * 10;
-				return Math.min(oldProgress + diff, 100);
+				const diff = .5
+				return Math.min(oldProgress + diff, 36);
 			});
 		}, 500);
 		return () => {
@@ -114,7 +114,7 @@ export default function ProgressLabel() {
 			<Typography variant="h5" color="gray" className="mt-8">
 				{loadingTexts[currentTextIndex % loadingTexts.length] }
 			</Typography>
-			<Progress value={parseInt(progress)} label="Completed" />;
+			<Progress value={parseInt(progress/36*100)} label="Completed" />;
 		</>
 	)
 }
