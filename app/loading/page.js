@@ -18,7 +18,7 @@ export default function ProgressLabel() {
 		"조금만 기다리면 완성됩니다!"
 	];
 
-	const url = (endpoint) => `${process.env.NODE_ENV == 'development' ? 'http://216.153.62.1:8080' : ''}/api/${endpoint}`;
+	const url = (endpoint) => `${process.env.NODE_ENV == 'development' ? 'http://216.153.57.204:8080' : ''}/api/${endpoint}`;
 	const router = useRouter();
 
 	// const waitForTaskIdChange = () => {
