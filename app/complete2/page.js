@@ -28,11 +28,14 @@ const Page = () => {
       <div>
         <Card className="w-96 border-e-4">
           <CardHeader shadow={false} floated={false} className="h-96">
-            <img
-              src={global?.imageUrls?.get(0)||dummy}
-              alt="card-image"
-              className="h-full w-full object-cover"
-            />
+            {(global.imageUrls || [dummy]).map((imageUrl, index) =>
+              <img
+                key={index}
+                src={imageUrl}
+                alt="card-image"
+                className="h-full w-full object-cover"
+              />
+            )}
           </CardHeader>
           <CardBody>
             <div className="mb-2 flex items-center justify-between">
