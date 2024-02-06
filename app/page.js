@@ -30,14 +30,14 @@ export default function StepperWithContent() {
   const router = useRouter();
   const capture = useCallback(() => setImgSrc(webcamRef.current.getScreenshot({ width: 640, height: 480 })), [webcamRef]);
 
-  const url = endpoint => `${process.env.NODE_ENV == 'development' ? 'http://216.153.62.1:8080' : ''}/api/${endpoint}`;
+  const url = endpoint => `${process.env.NODE_ENV == 'development' ? 'http://216.153.57.204:8080' : ''}/api/${endpoint}`;
   const handleNext = () => !isLastStep && setActiveStep(cur => cur + 1);
   const handlePrev = () => !isFirstStep && setActiveStep(cur => cur - 1);
   const generateImages = async () => {
     router.push('/loading')
     const formData = new FormData();
     formData.append('files', new File([await fetch(imgSrc).then(res => res.blob())], "image.jpg", { type: "image/jpeg" }));
-    formData.append('db',db)
+    formData.append('db',JSON.stringify(db))
     Object.keys(db).forEach((key, i) => formData.append(key, step[i]));
     const taskId = +(await fetch(url('generateImages/1'), { method: 'POST', body: formData }).then(ret => ret.json())).taskId
     console.log(`taskId: ${taskId}`);
