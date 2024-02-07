@@ -1,6 +1,7 @@
 'use client';
 
 import React, {useEffect, useState} from 'react';
+import { useRouter } from 'next/navigation' 
 import { saveAs } from 'file-saver'
 import Image from 'next/image';
 import { Carousel } from '@material-tailwind/react';
@@ -15,6 +16,9 @@ const dummy = 'complete_dummy.jpg';
 const Page = () => {
   const [currentUrl, setCurrentUrl] = useState('');
   const [isMobile, setIsMobile] = useState(true);
+  const {taskId}=useRouter().query; //your-page-path?taskId=${taskId}에서 taskId를 가져옴
+
+  const url = endpoint => `${process.env.NODE_ENV == 'development' ? 'http://216.153.57.204:8080' : ''}/api/${endpoint}`;
 
   useEffect(() => {
     setCurrentUrl(window.location.href);
@@ -23,6 +27,22 @@ const Page = () => {
   useEffect(() => {
     console.log(isMobile ? "모바일 환경입니다." : "데스크탑 환경입니다.");
   }, [isMobile]);
+//처음 로드될 때 서버에서 이미지 다운로드
+  useEffect(() => {
+    fetch('http://localhost:8080/api/download')
+      .then(response => response.blob())
+      .then(blob => {
+        const url = window.URL.createObjectURL(new Blob([blob]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', '4cut.png');
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode.removeChild(link);
+      });
+  }, []);
+
+
   return (
     <div className='w-full h-screen p-12'>
       <div className="w-full justify-normal bg-white rounded-2xl divide-x flex flex-row mx-auto">
