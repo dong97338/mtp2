@@ -16,7 +16,7 @@ const dummy = 'complete_dummy.jpg';
 const Page = () => {
   const [currentUrl, setCurrentUrl] = useState('');
   const [isMobile, setIsMobile] = useState(true);
-  const {taskId}=useRouter().query; //your-page-path?taskId=${taskId}에서 taskId를 가져옴
+  const {taskId}=useRouter().query ?? {}; //your-page-path?taskId=${taskId}에서 taskId를 가져옴
   const [imgUrl, setImgUrl] = useState(''); //이미지 다운로드 url
 
   const url = endpoint => `${process.env.NODE_ENV == 'development' ? 'http://216.153.57.204:8080' : ''}/api/${endpoint}`;
