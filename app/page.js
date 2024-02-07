@@ -36,6 +36,7 @@ export default function StepperWithContent() {
     formData.append('db', JSON.stringify(db))
     Object.keys(db).forEach((key, i) => formData.append(key, step[i]));
     const taskId = +(await fetch(url('generateImages/1'), { method: 'POST', body: formData }).then(ret => ret.json())).taskId
+    global.taskId=taskId;
     console.log(`taskId: ${taskId}`);
     const intervalId = setInterval(async () => {
       try {

@@ -17,6 +17,7 @@ const Page = () => {
   const [currentUrl, setCurrentUrl] = useState('');
   const [isMobile, setIsMobile] = useState(true);
   const {taskId}=useRouter().query; //your-page-path?taskId=${taskId}에서 taskId를 가져옴
+  const [imgUrl, setImgUrl] = useState(''); //이미지 다운로드 url
 
   const url = endpoint => `${process.env.NODE_ENV == 'development' ? 'http://216.153.57.204:8080' : ''}/api/${endpoint}`;
 
@@ -29,18 +30,12 @@ const Page = () => {
   }, [isMobile]);
 //처음 로드될 때 서버에서 이미지 다운로드
   useEffect(() => {
-    fetch('http://localhost:8080/api/download')
-      .then(response => response.blob())
-      .then(blob => {
-        const url = window.URL.createObjectURL(new Blob([blob]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', '4cut.png');
-        document.body.appendChild(link);
-        link.click();
-        link.parentNode.removeChild(link);
-      });
-  }, []);
+    setImgUrl(url(`download/${taskId}`)),[] //서버 fetch할 때는 /taskid바로
+  })
+
+
+
+
 
 
   return (
@@ -48,7 +43,7 @@ const Page = () => {
       <div className="w-full justify-normal bg-white rounded-2xl divide-x flex flex-row mx-auto">
         <Card className="w-96 border-e-4">
           <CardHeader shadow={false} floated={false} className="h-96">
-            {(global.imageUrls || [dummy]).map((imageUrl, index) =>
+            {([imgUrl] || [dummy]).map((imageUrl, index) =>
               <img key={index} src={imageUrl} alt="card-image" className="h-full w-full object-cover" />
             )}
           </CardHeader>
@@ -64,7 +59,7 @@ const Page = () => {
 
           </CardBody>
           <CardFooter className="pt-0">
-            <a href={dummy} download='4cut.png'>
+            <a href={imgUrl} download='4cut.png'>
               <Button
                 ripple={false}
                 fullWidth={true}
@@ -75,22 +70,6 @@ const Page = () => {
             </a>
           </CardFooter>
         </Card>
-        {!isMobile&&
-        <div className="flex flex-col place-items-center justify-center w-96">
-          <QRCodeSVG value={currentUrl} />
-          <p className='text-black text-base mb-10'>QR</p>
-          <div>
-            <img
-              src="https://t4.ftcdn.net/jpg/06/86/38/05/240_F_686380547_Uo1eGf1lznayp1hguQMumt66Rb5oZLhk.jpg"
-              alt="card-image"
-              onClick={handleImageClick}
-              className="w-32 h-32 mt-1"
-              style={{ cursor: 'pointer' }}
-            />
-          </div>
-          <p className='text-black text-base'>메인 화면</p>
-        </div>
-        }
       </div>
     </div>
   );

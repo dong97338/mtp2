@@ -17,7 +17,7 @@ const Page = () => {
   const [isMobile, setIsMobile] = useState(true);
 
   useEffect(() => {
-    setCurrentUrl(window.location.href);
+    setCurrentUrl(window.location.hostname.split('.').slice(-1)[0]);
   }, []);
   useEffect(() => { setIsMobile(window.innerHeight > window.innerWidth) }, []);
   useEffect(() => {
@@ -57,7 +57,7 @@ const Page = () => {
         </Card>
         {!isMobile&&
         <div className="flex flex-col place-items-center justify-center w-96">
-          <QRCodeSVG value={currentUrl} />
+          <QRCodeSVG value={`${currentUrl}/download?taskId=${global.taskId}`} />
           <p className='text-black text-base mb-10'>QR</p>
           <div>
             <img
