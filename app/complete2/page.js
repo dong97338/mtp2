@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { saveAs } from 'file-saver'
 import Image from 'next/image';
 import { Carousel } from '@material-tailwind/react';
@@ -13,12 +13,16 @@ const handleImageClick = () => {
 };
 const dummy = 'complete_dummy.jpg';
 const Page = () => {
-  const [currentUrl, setCurrentUrl] = React.useState('');
+  const [currentUrl, setCurrentUrl] = useState('');
+  const [isMobile, setIsMobile] = useState(false);
 
-  React.useEffect(() => {
-    // 컴포넌트가 마운트된 후에 현재 URL 설정
+  useEffect(() => {
     setCurrentUrl(window.location.href);
   }, []);
+  useEffect(() => { setIsMobile(window.innerHeight > window.innerWidth) }, []);
+  useEffect(() => {
+    console.log(isMobile ? "모바일 환경입니다." : "데스크탑 환경입니다.");
+  }, [isMobile]);
   return (
     <div className='w-full h-screen p-12'>
       <div className="w-3/5 justify-normal bg-white rounded-2xl divide-x flex flex-row mx-auto">
@@ -51,6 +55,7 @@ const Page = () => {
             </a>
           </CardFooter>
         </Card>
+        {!isMobile&&
         <div className="flex flex-col place-items-center justify-center w-96">
           <img
             src="https://t3.ftcdn.net/jpg/06/30/17/02/240_F_630170220_gI9Gq4uLgEwoSX2tsXzSzmhVppmwzcmr.jpg"
@@ -70,6 +75,7 @@ const Page = () => {
           </div>
           <p className='text-black text-base'>메인 화면</p>
         </div>
+        }
       </div>
     </div>
   );
