@@ -13,6 +13,12 @@ const handleImageClick = () => {
 };
 const dummy = 'complete_dummy.jpg';
 const Page = () => {
+  const [currentUrl, setCurrentUrl] = React.useState('');
+
+  useEffect(() => {
+    // 컴포넌트가 마운트된 후에 현재 URL 설정
+    setCurrentUrl(window.location.href);
+  }, []);
   return (
     <div className='w-full h-screen p-12'>
       <div className="w-3/5 justify-normal bg-white rounded-2xl divide-x flex flex-row mx-auto">
@@ -51,7 +57,7 @@ const Page = () => {
             alt="card-image"
             className="w-32 h-32 mt-1"
           />
-          <QRCodeSVG value="https://www.naver.com" />
+          <QRCodeSVG value={currentUrl} />
           <p className='text-black text-base mb-10'>QR</p>
           <div>
             <img
