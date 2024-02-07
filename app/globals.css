@@ -43,7 +43,7 @@ body {
     inset: calc(-1*var(--b));
     padding: var(--b);
     border-radius: calc(var(--b) + var(--r));
-    background: linear-gradient(135deg, rgba(255, 255, 255), rgb(255, 153, 0));
+    background: linear-gradient(135deg, rgb(228, 228, 228), rgb(136, 136, 136));
     opacity: 0.5;
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;

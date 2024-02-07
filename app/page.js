@@ -2,18 +2,14 @@
 
 import { useCallback, useRef, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation'
-import {
-  Stepper, Step, Button, Typography, Card,
-  CardHeader,
-  CardBody,
-  CardFooter
-} from "@material-tailwind/react";
+import { CardHeader, CardBody, CardFooter, Stepper, Step, Button, Typography, Card } from "@material-tailwind/react";
 import { CameraIcon, BookOpenIcon, UserIcon, PaintBrushIcon, VideoCameraIcon } from "@heroicons/react/24/outline";
 import Webcam from "react-webcam";
 
 const db = { story: ['디즈니', '지브리', '해리포터'], gender: ['남자', '여자'] }
 const steps = [[CameraIcon, "사진"], [PaintBrushIcon, "스토리"], [UserIcon, "성별"]]
 const backgroundImages = ['/transparent.png', '/autumn.jpg', '/dawn.jpg', '/snow.jpg', '/space.jpg']
+const cardImages = ['/transparent.png', '/autumn.jpg', '/dawn.jpg', '/snow.jpg', '/space.jpg']
 
 export default function StepperWithContent() {
   const [activeStep, setActiveStep] = useState(0);
@@ -37,7 +33,7 @@ export default function StepperWithContent() {
     router.push('/loading')
     const formData = new FormData();
     formData.append('files', new File([await fetch(imgSrc).then(res => res.blob())], "image.jpg", { type: "image/jpeg" }));
-    formData.append('db',JSON.stringify(db))
+    formData.append('db', JSON.stringify(db))
     Object.keys(db).forEach((key, i) => formData.append(key, step[i]));
     const taskId = +(await fetch(url('generateImages/1'), { method: 'POST', body: formData }).then(ret => ret.json())).taskId
     console.log(`taskId: ${taskId}`);
@@ -66,7 +62,6 @@ export default function StepperWithContent() {
   return (
     <div className="w-full h-screen p-12" style={{ backgroundImage: `url(${backgroundImages[index]})`, backgroundSize: 'cover', transition: '0.5s ease-out' }}>
       <div className="backdrop-blur-md glass shadow-2xl">
-
         <div className="w-full px-24 py-4">
           <Stepper activeStep={activeStep} isLastStep={setIsLastStep} isFirstStep={setIsFirstStep}>
             {steps.map(([Icon, str], i) =>
@@ -100,16 +95,12 @@ export default function StepperWithContent() {
               </div>
             }
             {Object.values(db).map((li, i1) =>
-              // step
               activeStep == i1 + 1 &&
               <div className="flex justify-center p-4">
                 {li.map((str, i2) =>
-                  <Card className="mx-auto mt-6 w-96 ">
+                  <Card className="mx-auto mt-6 w-96 backdrop-blur-md glass shadow-2xl">
                     <CardHeader color="blue-gray" className="relative h-56">
-                      <img
-                        src={backgroundImages[i2 + 1]}
-                        alt="card-image"
-                      />
+                      <img src={cardImages[i2 + 1]} alt="card-image" />
                     </CardHeader>
                     <CardBody>
                       <Typography variant="h5" color="blue-gray" className="mb-2">
@@ -129,7 +120,6 @@ export default function StepperWithContent() {
                   </Card>
                 )}
               </div>
-
             )}
           </div>
           <div className="mt-32 flex justify-between">
