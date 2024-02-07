@@ -15,7 +15,7 @@ const dummy = 'complete_dummy.jpg';
 const Page = () => {
   const [currentUrl, setCurrentUrl] = React.useState('');
 
-  useEffect(() => {
+  React.useEffect(() => {
     // 컴포넌트가 마운트된 후에 현재 URL 설정
     setCurrentUrl(window.location.href);
   }, []);
