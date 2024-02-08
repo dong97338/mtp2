@@ -26,7 +26,8 @@ export default function StepperWithContent() {
   const router = useRouter();
   const capture = useCallback(() => setImgSrc(webcamRef.current.getScreenshot({ width: 640, height: 480 })), [webcamRef]);
 
-  const url = endpoint => `${process.env.NODE_ENV == 'development' ? 'http://216.153.57.204:8080' : ''}/api/${endpoint}`;
+  // const url = endpoint => `${process.env.NODE_ENV == 'development' ? 'http://216.153.57.204:8080' : ''}/api/${endpoint}`;
+  const url = endpoint => `216.153.57.204:8081/api/${endpoint}`;
   const handleNext = () => !isLastStep && setActiveStep(cur => cur + 1);
   const handlePrev = () => !isFirstStep && setActiveStep(cur => cur - 1);
   const generateImages = async () => {
@@ -67,7 +68,7 @@ export default function StepperWithContent() {
           <Stepper activeStep={activeStep} isLastStep={setIsLastStep} isFirstStep={setIsFirstStep}>
             {steps.map(([Icon, str], i) =>
               <Step key={i} onClick={() => setActiveStep(i)}>
-                <Icon className="h-5 w-5" />
+                <Icon className="size-5" />
                 <div className="absolute -bottom-[4.5rem] w-max text-center">
                   <Typography variant="h6" color={activeStep === i ? "blue-gray" : "gray"}>
                     Step {i + 1}
@@ -85,7 +86,7 @@ export default function StepperWithContent() {
                 <div className="aspect-[4/3] overflow-hidden border-dashed border-4 border-gray-400"> {/*overflow-hidden이 640, 축소비율 조건 만족*/}
                   {!imgSrc && !webcamLoaded &&
                     <div className='grid animate-pulse h-full bg-gray-300'>
-                      <VideoCameraIcon className="h-24 w-24 m-auto text-gray-500" strokeWidth={2} />
+                      <VideoCameraIcon className="size-24 m-auto text-gray-500" strokeWidth={2} />
                     </div>
                   }
                   {imgSrc ? <img src={imgSrc} /> : <Webcam ref={webcamRef} height={480} width={640} screenshotFormat="image/jpeg" onUserMedia={() => setWebcamLoaded(true)} />}
