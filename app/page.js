@@ -45,7 +45,7 @@ export default function StepperWithContent() {
         if (+data.status == 0) {
           global.imageUrl = url(`image/${data.imagePath.replaceAll('/', '+')}`);
           clearInterval(intervalId);
-          router.push(`/complete2?image=${encodeURIComponent(global.imageUrl)}`);
+          router.push(`/${encodeURIComponent(global.imageUrl)}`);
         }
         if (+data.status == 1) {
           console.log('if status:1');

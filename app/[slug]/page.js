@@ -13,14 +13,15 @@ const handleImageClick = () => {
   alert('클릭 성공');
 };
 const dummy = 'complete_dummy.jpg';
-const Page = () => {
+const Page = ({params}) => {
   const [currentUrl, setCurrentUrl] = useState('');
   const [isMobile, setIsMobile] = useState(true);
-  let { image } = useRouter().query??{image:''} //ssg 단계에서는 query가 없을 수 있음: https://chat.openai.com/share/688c3d25-4a28-4ad9-a021-ff71ecd9d336
-  image = decodeURIComponent(image);
+  // let { image } = params.slug //ssg 단계에서는 query가 없을 수 있음: https://chat.openai.com/share/688c3d25-4a28-4ad9-a021-ff71ecd9d336
+  const image = decodeURIComponent(params.slug);
+  console.log(`decoded_image: ${image}`)
 
   useEffect(() => {
-    setCurrentUrl(window.location.hostname.split('.').slice(-1)[0]);
+    setCurrentUrl(window.location.herf);
   }, []);
   useEffect(() => { setIsMobile(window.innerHeight > window.innerWidth) }, []);
   useEffect(() => {
@@ -58,7 +59,7 @@ const Page = () => {
         </Card>
         {!isMobile&&
         <div className="flex flex-col place-items-center justify-center w-96">
-          <QRCodeSVG value={`${currentUrl}/complete2?image=${image}`} />
+          <QRCodeSVG value={`${currentUrl}`} />
           <p className='text-black text-base mb-10'>QR</p>
           <div>
             <img
