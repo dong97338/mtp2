@@ -16,7 +16,7 @@ const dummy = 'complete_dummy.jpg';
 const Page = () => {
   const [currentUrl, setCurrentUrl] = useState('');
   const [isMobile, setIsMobile] = useState(true);
-  let { image } = useRouter().query;
+  let { image } = useRouter().query??{image:''}
   image = decodeURIComponent(image);
 
   useEffect(() => {
