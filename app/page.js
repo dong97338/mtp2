@@ -43,7 +43,7 @@ export default function StepperWithContent() {
         const response = await fetch(url(`checkStatus/${taskId}`));
         const data = await response.json();
         if (+data.status == 0) {
-          global.imageUrl = url(`image/${imagePath.replaceAll('/', '+')}`);
+          global.imageUrl = url(`image/${data.imagePath.replaceAll('/', '+')}`);
           clearInterval(intervalId);
           router.push(`/complete2?image=${encodeURIComponent(global.imageUrl)}`);
         }

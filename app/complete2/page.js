@@ -16,7 +16,7 @@ const dummy = 'complete_dummy.jpg';
 const Page = () => {
   const [currentUrl, setCurrentUrl] = useState('');
   const [isMobile, setIsMobile] = useState(true);
-  let { image } = useRouter().query??{image:''}
+  let { image } = useRouter().query??{image:''} //ssg 단계에서는 query가 없을 수 있음: https://chat.openai.com/share/688c3d25-4a28-4ad9-a021-ff71ecd9d336
   image = decodeURIComponent(image);
 
   useEffect(() => {
