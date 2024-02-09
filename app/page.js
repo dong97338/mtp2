@@ -43,9 +43,9 @@ export default function StepperWithContent() {
         const response = await fetch(url(`checkStatus/${taskId}`));
         const data = await response.json();
         if (+data.status == 0) {
-          global.imageUrls = data.imagePaths.map(imagePath => url(`image/${imagePath.replaceAll('/', '+')}`));
+          global.imageUrl = url(`image/${imagePath.replaceAll('/', '+')}`);
           clearInterval(intervalId);
-          router.push('/complete2');
+          router.push(`/complete2?image=${global.imageUrl}`);
         }
         if (+data.status == 1) {
           console.log('if status:1');

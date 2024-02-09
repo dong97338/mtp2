@@ -5,6 +5,7 @@ import { saveAs } from 'file-saver'
 import Image from 'next/image';
 import { Carousel } from '@material-tailwind/react';
 import { QRCodeSVG } from 'qrcode.react'
+import { useRouter } from 'next/navigation'
 
 import { Card, CardHeader, CardBody, CardFooter, Typography, Button } from "@material-tailwind/react";
 
@@ -15,6 +16,7 @@ const dummy = 'complete_dummy.jpg';
 const Page = () => {
   const [currentUrl, setCurrentUrl] = useState('');
   const [isMobile, setIsMobile] = useState(true);
+  const { image } = useRouter().query;
 
   useEffect(() => {
     setCurrentUrl(window.location.hostname.split('.').slice(-1)[0]);
@@ -28,9 +30,7 @@ const Page = () => {
       <div className="w-full justify-normal bg-white rounded-2xl divide-x flex flex-row mx-auto">
         <Card className="w-96 border-e-4">
           <CardHeader shadow={false} floated={false} className="h-96">
-            {(global.imageUrls || [dummy]).map((imageUrl, index) =>
-              <img key={index} src={imageUrl} alt="card-image" className="h-full w-full object-cover" />
-            )}
+              <img src={image||dummy} alt="card-image" className="h-full w-full object-cover" />
           </CardHeader>
           <CardBody>
             <div className="mb-2 flex items-center justify-between">
@@ -44,7 +44,7 @@ const Page = () => {
 
           </CardBody>
           <CardFooter className="pt-0">
-            <a href={dummy} download='4cut.png'>
+            <a href={image||dummy} download='4cut.png'>
               <Button
                 ripple={false}
                 fullWidth={true}
@@ -57,7 +57,7 @@ const Page = () => {
         </Card>
         {!isMobile&&
         <div className="flex flex-col place-items-center justify-center w-96">
-          <QRCodeSVG value={`${currentUrl}/download?taskId=${global.taskId}`} />
+          <QRCodeSVG value={`${currentUrl}/complete2?image=${image}`} />
           <p className='text-black text-base mb-10'>QR</p>
           <div>
             <img
