@@ -26,8 +26,7 @@ export default function StepperWithContent() {
   const router = useRouter();
   const capture = useCallback(() => setImgSrc(webcamRef.current.getScreenshot({ width: 640, height: 480 })), [webcamRef]);
 
-  // const url = endpoint => `${process.env.NODE_ENV == 'development' ? 'http://216.153.57.204:8080' : ''}/api/${endpoint}`;
-  const url = endpoint => `216.153.57.204:8081/api/${endpoint}`;
+  const url = endpoint => `/api/${endpoint}`;
   const handleNext = () => !isLastStep && setActiveStep(cur => cur + 1);
   const handlePrev = () => !isFirstStep && setActiveStep(cur => cur - 1);
   const generateImages = async () => {
