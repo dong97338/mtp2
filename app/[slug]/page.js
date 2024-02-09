@@ -21,7 +21,7 @@ const Page = ({params}) => {
   console.log(`decoded_image: ${image}`)
 
   useEffect(() => {
-    setCurrentUrl(window.location.herf);
+    setCurrentUrl(window.location.href);
   }, []);
   useEffect(() => { setIsMobile(window.innerHeight > window.innerWidth) }, []);
   useEffect(() => {
