@@ -17,6 +17,7 @@ const Page = () => {
   const [currentUrl, setCurrentUrl] = useState('');
   const [isMobile, setIsMobile] = useState(true);
   const { image } = useRouter().query;
+  image = decodeURIComponent(image);
 
   useEffect(() => {
     setCurrentUrl(window.location.hostname.split('.').slice(-1)[0]);
