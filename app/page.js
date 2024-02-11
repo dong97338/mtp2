@@ -3,13 +3,56 @@
 import { useCallback, useRef, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation'
 import { CardHeader, CardBody, CardFooter, Stepper, Step, Button, Typography, Card } from "@material-tailwind/react";
-import { CameraIcon, BookOpenIcon, UserIcon, PaintBrushIcon, VideoCameraIcon } from "@heroicons/react/24/outline";
+import { CameraIcon, UserIcon, PaintBrushIcon, VideoCameraIcon } from "@heroicons/react/24/outline";
+import { useSpring, animated, config } from 'react-spring'; //npm install react-spring@8.0.27: https://stackoverflow.com/a/66802388
 import Webcam from "react-webcam";
 
 const db = { story: ['디즈니', '지브리', '해리포터'], gender: ['남자', '여자'] }
 const steps = [[CameraIcon, "사진"], [PaintBrushIcon, "스토리"], [UserIcon, "성별"]]
 const backgroundImages = ['/transparent.png', '/autumn.jpg', '/dawn.jpg', '/snow.jpg', '/space.jpg']
 const cardImages = ['/transparent.png', '/autumn.jpg', '/dawn.jpg', '/snow.jpg', '/space.jpg']
+
+const InteractiveCard = ({ children, className }) => {
+  const containerRef = useRef(null);
+  const overlayRef = useRef(null);
+  const container = containerRef.current;
+  const overlay = overlayRef.current;
+
+  const [{ xys }, api] = useSpring(() => ({}));
+  const cfg = { mass: 1, tension: 350, friction: 10 }
+
+  useEffect(() => { api({ xys: [0, 0, 1] }) });
+
+  const handleMouseMove = e => {
+    const { left, top, width, height } = container.getBoundingClientRect();
+    const x = (e.clientX - left) / width;
+    const y = (e.clientY - top) / height;
+    overlay.style.backgroundPosition = `${100 - x * 100}% ${100 - y * 100}%`;
+    overlay.style.filter = `brightness(1.2)`;
+    api({ xys: [10 * y - 5, -(10 * x - 5), 1.05], config: cfg });
+  };
+
+  const handleMouseOut = () => {
+    overlay.style.filter = 'opacity(0)';
+    api({ xys: [0, 0, 1], config: { mass: 10, tension: 350, friction: 30 } });
+  };
+
+  return (
+    <animated.div ref={containerRef} className={`container ${className} relative`} onMouseMove={handleMouseMove} onMouseOut={handleMouseOut} style={{
+      transform: xys?.interpolate((x, y, s) => `perspective(350px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`), //TypeError: Cannot read properties of undefined (reading 'interpolate')
+    }}>
+      <div ref={overlayRef} className="overlay absolute w-full h-full duration-100" style={{
+        background: 'radial-gradient(circle, rgba(255,255,255,0.5), rgba(255,255,255,0), rgba(0,0,0,0.2))',
+        filter: 'brightness(1.1) opacity(0.8)',
+        mixBlendMode: 'color-dodge',
+        backgroundSize: '150% 150%',
+        backgroundPosition: '100%',
+        borderRadius: '20px'
+      }} />
+      {children}
+    </animated.div>
+  );
+};
 
 export default function StepperWithContent() {
   const [activeStep, setActiveStep] = useState(0);
@@ -36,7 +79,7 @@ export default function StepperWithContent() {
     formData.append('db', JSON.stringify(db))
     Object.keys(db).forEach((key, i) => formData.append(key, step[i]));
     const taskId = +(await fetch(url('generateImages/1'), { method: 'POST', body: formData }).then(ret => ret.json())).taskId
-    global.taskId=taskId;
+    global.taskId = taskId;
     console.log(`taskId: ${taskId}`);
     const intervalId = setInterval(async () => {
       try {
@@ -99,26 +142,28 @@ export default function StepperWithContent() {
               activeStep == i1 + 1 &&
               <div className="flex justify-center p-4">
                 {li.map((str, i2) =>
-                  <Card className="mx-auto mt-6 w-96 backdrop-blur-md glass shadow-2xl">
-                    <CardHeader color="blue-gray" className="relative h-56">
-                      <img src={cardImages[i2 + 1]} alt="card-image" />
-                    </CardHeader>
-                    <CardBody>
-                      <Typography variant="h5" color="blue-gray" className="mb-2">
-                        {str}
-                      </Typography>
-                      <Typography>
-                        The place is close to Barceloneta Beach and bus stop just 2 min by
-                        walk and near to &quot;Naviglio&quot; where you can enjoy the main
-                        night life in Barcelona.
-                      </Typography>
-                    </CardBody>
-                    <CardFooter className="pt-0">
-                      <Button key={`${i1}${i2}`} onClick={() => setStep({ ...step, [i1]: i2 })} onMouseEnter={() => setIndex(i2 + 1)} color={step[i1] == i2 ? "blue" : "gray"}>
-                        {str}
-                      </Button>
-                    </CardFooter>
-                  </Card>
+                  <InteractiveCard className="mx-auto mt-6 w-96">
+                    <Card className="backdrop-blur-md glass shadow-2xl">
+                      <CardHeader color="blue-gray" className="relative h-56">
+                        <img src={cardImages[i2 + 1]} alt="card-image" />
+                      </CardHeader>
+                      <CardBody>
+                        <Typography variant="h5" color="blue-gray" className="mb-2">
+                          {str}
+                        </Typography>
+                        <Typography>
+                          The place is close to Barceloneta Beach and bus stop just 2 min by
+                          walk and near to &quot;Naviglio&quot; where you can enjoy the main
+                          night life in Barcelona.
+                        </Typography>
+                      </CardBody>
+                      <CardFooter className="pt-0">
+                        <Button key={`${i1}${i2}`} onClick={() => setStep({ ...step, [i1]: i2 })} onMouseEnter={() => setIndex(i2 + 1)} color={step[i1] == i2 ? "blue" : "gray"}>
+                          {str}
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  </InteractiveCard>
                 )}
               </div>
             )}
