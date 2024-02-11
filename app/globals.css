@@ -27,7 +27,7 @@ body {
 @layer utilities {
   .glass {
     --b: 2px;
-    --r: 20px;
+    --r: 24px;
     font-size: 25px;
     border: none;
     padding: 10px 20px;

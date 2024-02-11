@@ -17,38 +17,30 @@ const InteractiveCard = ({ children, className }) => {
   const overlayRef = useRef(null);
   const container = containerRef.current;
   const overlay = overlayRef.current;
-
-  const [{ xys }, api] = useSpring(() => ({}));
-  const cfg = { mass: 1, tension: 350, friction: 10 }
-
-  useEffect(() => { api({ xys: [0, 0, 1] }) });
-
+  const [{ xys, opacity }, api] = useSpring(() => ({}));
+  const trans = {transform: xys?.interpolate((x, y, s) => `perspective(350px) rotateX(${10 * y - 5}deg) rotateY(${-(10 * x - 5)}deg) scale(${s})`)}
+  const bg = {
+    background: 'radial-gradient(circle, rgba(255,255,255,0.5), rgba(255,255,255,0), rgba(0,0,0,0.2))',
+    backgroundPosition: xys?.interpolate((x, y) => `${100 - x * 100}% ${100 - y * 100}%`),
+    backgroundSize: '150% 150%',
+    opacity
+  }
+  
   const handleMouseMove = e => {
     const { left, top, width, height } = container.getBoundingClientRect();
     const x = (e.clientX - left) / width;
     const y = (e.clientY - top) / height;
-    overlay.style.backgroundPosition = `${100 - x * 100}% ${100 - y * 100}%`;
     overlay.style.filter = `brightness(1.2)`;
-    api({ xys: [10 * y - 5, -(10 * x - 5), 1.05], config: cfg });
+    api({ xys: [x, y, 1.05], opacity: 0.8, config: { mass: 1, tension: 350, friction: 10 } })
   };
-
   const handleMouseOut = () => {
-    overlay.style.filter = 'opacity(0)';
-    api({ xys: [0, 0, 1], config: { mass: 10, tension: 350, friction: 30 } });
-  };
-
+    api({ xys: [.5, .5, 1], opacity: 0, config: { mass: 10, tension: 350, friction: 30 } })
+  }
+  handleMouseOut()
+  
   return (
-    <animated.div ref={containerRef} className={`container ${className} relative`} onMouseMove={handleMouseMove} onMouseOut={handleMouseOut} style={{
-      transform: xys?.interpolate((x, y, s) => `perspective(350px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`), //TypeError: Cannot read properties of undefined (reading 'interpolate')
-    }}>
-      <div ref={overlayRef} className="overlay absolute w-full h-full duration-100" style={{
-        background: 'radial-gradient(circle, rgba(255,255,255,0.5), rgba(255,255,255,0), rgba(0,0,0,0.2))',
-        filter: 'brightness(1.1) opacity(0.8)',
-        mixBlendMode: 'color-dodge',
-        backgroundSize: '150% 150%',
-        backgroundPosition: '100%',
-        borderRadius: '20px'
-      }} />
+    <animated.div ref={containerRef} className={`container ${className} relative`} onMouseMove={handleMouseMove} onMouseOut={handleMouseOut} style={trans}>
+      <animated.div ref={overlayRef} className="overlay absolute h-full w-full rounded-3xl mix-blend-color-dodge brightness-110" style={bg} />
       {children}
     </animated.div>
   );
