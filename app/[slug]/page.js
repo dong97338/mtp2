@@ -30,13 +30,13 @@ const Page = ({params}) => {
     <div className="h-screen w-full p-12">
       <div className="mx-auto flex w-full flex-row justify-normal divide-x rounded-2xl bg-white">
         <Card className="w-96 border-e-4">
-          <CardHeader shadow={false} floated={false} className="h-96">
+          <CardHeader shadow={false} floated={false} className="h-auto">
             <img src={image || dummy} alt="card-image" className="h-full w-full object-cover" />
           </CardHeader>
           <CardBody>
             <div className="mb-2 flex items-center justify-between">
               <Typography color="blue-gray" className="font-medium">
-                드래곤 타는 이야기
+                {/* 드래곤 타는 이야기 */}
               </Typography>
               <Typography color="blue-gray" className="font-medium">
                 KAIROS
