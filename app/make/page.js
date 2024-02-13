@@ -8,11 +8,11 @@ import {useSpring, animated, useChain} from 'react-spring' //npm install react-s
 import {motion} from 'framer-motion'
 import Webcam from 'react-webcam'
 
-const db = {story: ['지브리', '팀플스토리', '긱사네컷'], gender: ['남자', '여자']}
+const db = {story: ['원령공주 이야기', '팀플스토리', '긱사네컷'], gender: ['남자', '여자']}
 const details = {
-  지브리: '지브리의 원령공주 속으로 들어가, 신비로운 늑대를 만나, 함께 마음껏 달려보세요',
-  팀플스토리: '토이스토리 스타일 주인공이 되어, 주변 캐릭터와 팀플하는 이야기',
-  긱사네컷: '내가 해리포터 영화 속 주인공이라면? 나랑 어울리는 호그와트 기숙사는 어디일지 알아보세요.'
+  '원령공주 이야기': '지브리의 원령공주 속으로 들어가, 신비로운 늑대를 만나, 함께 마음껏 달려보세요',
+  '팀플스토리': '토이스토리 스타일 주인공이 되어, 주변 캐릭터와 팀플하는 이야기',
+  '긱사네컷': '내가 해리포터 영화 속 주인공이라면? 나랑 어울리는 호그와트 기숙사는 어디일지 알아보세요.'
 }
 const dummy = 'The place is close to Barceloneta Beach and bus stop just 2 min by walk and near to &quot;Naviglio&quot; where you can enjoy the main night life in Barcelona.'
 const steps = [
@@ -26,7 +26,7 @@ const cardImages = ['/지브리.png', '/팀플스토리.png', '/긱사네컷.png
 const InteractiveCard = ({children, className}) => {
   const [{xyso}, api] = useSpring(() => ({}))
   const style = {
-    transform: xyso?.interpolate((x, y, s) => `perspective(350px) rotateX(${10 * y - 5}deg) rotateY(${-(10 * x - 5)}deg) scale(${s})`),
+    transform: xyso?.interpolate((x, y, s) => `perspective(350px) rotateX(${6 * y - 3}deg) rotateY(${-(6 * x - 3)}deg) scale(${s})`),
     background: xyso?.interpolate((x, y, s, o) => `radial-gradient(500px at ${100 * x}% ${100 * y}%, rgb(255 255 255/${0.5 * o}), transparent, rgb(0 0 0/${0.2 * o}))`)
   }
   const handleMouseMove = e => {
