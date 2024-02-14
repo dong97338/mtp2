@@ -9,6 +9,7 @@ import {motion} from 'framer-motion'
 import Webcam from 'react-webcam'
 
 const db = {story: ['원령공주 이야기', '팀플스토리', '긱사네컷'], gender: ['남자', '여자']}
+const cardImages = {story: ['/지브리.png', '/팀플스토리.png', '/긱사네컷.png'], gender: ['/팀플스토리.png', '/지브리.png']}
 const details = {
   '원령공주 이야기': '지브리의 원령공주 속으로 들어가, 신비로운 늑대를 만나, 함께 마음껏 달려보세요',
   '팀플스토리': '토이스토리 스타일 주인공이 되어, 주변 캐릭터와 팀플하는 이야기',
@@ -21,7 +22,6 @@ const steps = [
   [UserIcon, '성별']
 ]
 const backgroundImages = ['/transparent.png', '/autumn.jpg', '/dawn.jpg', '/snow.jpg', '/space.jpg']
-const cardImages = ['/지브리.png', '/팀플스토리.png', '/긱사네컷.png']
 
 const InteractiveCard = ({children, className}) => {
   const [{xyso}, api] = useSpring(() => ({}))
@@ -183,8 +183,8 @@ export default function StepperWithContent() {
                 </Button>
               </div>
             )}
-            {Object.values(db).map(
-              (li, i1) =>
+            {Object.entries(db).map(
+              ([key, li], i1) =>
                 activeStep == i1 + 1 && (
                   <div className="flex justify-center p-4">
                     {li.map((str, i2) => (
@@ -192,7 +192,7 @@ export default function StepperWithContent() {
                         {/* grid를 하면 가장 높은 카드에 나머지 카드 높이들도 맞춰짐 */}
                         <Card className="glass shadow-2xl backdrop-blur-md">
                           <CardHeader color="blue-gray" className="relative h-56">
-                            <img src={cardImages[i2]} alt="card-image" />
+                            <img src={cardImages[key][i2]} alt="card-image" />
                           </CardHeader>
                           <CardBody>
                             <Typography variant="h5" color="blue-gray" className="mb-2">
