@@ -103,12 +103,12 @@ export default function ProgressLabel() {
 
   // return <Progress value={progress} color="lightBlue" />;
   return (
-    <>
-      <Spinner className="h-52 w-52" />
-      <Typography variant="h5" color="gray" className="mt-8">
+    <div className='flex h-screen w-full flex-col items-center justify-center '>
+      <Spinner className=" h-52 w-52" />
+      <Typography variant="h5" color="gray" className="mx-auto mt-48">
         {loadingTexts[currentTextIndex % loadingTexts.length]}
       </Typography>
-      <Progress value={parseInt((progress / est) * 100)} label="Completed" />;
-    </>
+      <Progress value={parseInt((progress / est) * 100)} label="Completed" className='mt-32'/>;
+    </div>
   )
 }
