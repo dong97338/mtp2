@@ -93,7 +93,7 @@ export default function StepperWithContent() {
       try {
         const response = await fetch(url(`checkStatus/${taskId}`))
         const data = await response.json()
-        print(`status: ${data.status}`)
+        console.log(`status: ${data.status}`)
         if (+data.status == 0) {
           global.imageUrl = url(`image/${data.imagePath.replaceAll('/', '+')}`)
           clearInterval(intervalId)
