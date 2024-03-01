@@ -86,6 +86,7 @@ export default function StepperWithContent() {
     formData.append('files', new File([await fetch(imgSrc).then(res => res.blob())], 'image.png', {type: 'image/jpeg'}))
     formData.append('db', JSON.stringify(db))
     Object.keys(db).forEach((key, i) => formData.append(key, step[i]))
+    console.log('fetching...')
     const taskId = +(await fetch(url('generateImages/1'), {method: 'POST', body: formData}).then(ret => ret.json())).taskId
     global.taskId = taskId
     console.log(`taskId: ${taskId}`)
