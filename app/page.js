@@ -2,6 +2,7 @@
 
 import {useCallback, useRef, useState} from 'react'
 import {useRouter} from 'next/navigation'
+import Image from 'next/image'
 import {CardHeader, CardBody, CardFooter, Stepper, Step, Button, Typography, Card} from '@material-tailwind/react'
 import {CameraIcon, UserIcon, PaintBrushIcon, VideoCameraIcon, ArrowDownIcon} from '@heroicons/react/24/outline'
 // import {useSpring, animated, useChain} from 'react-spring' //npm install react-spring@8.0.27: https://stackoverflow.com/a/66802388
@@ -119,7 +120,8 @@ export default function StepperWithContent() {
     keys: null,
     from: {opacity: 0, transform: `translate3d(${prevStep < activeStep ? 100 : -100}%,0,0)`},
     enter: {opacity: 1, transform: 'translate3d(0%,0,0)'},
-    leave: {opacity: 0, transform: `translate3d(${prevStep < activeStep ? -100 : 100}%,0,0)`}
+    leave: {opacity: 0, transform: `translate3d(${prevStep < activeStep ? -100 : 100}%,0,0)`},
+    config: {precision: 0.0001}
   })
 
   const [isUp, setIsUp] = useState(false)
@@ -205,7 +207,7 @@ export default function StepperWithContent() {
                           {/* grid를 하면 가장 높은 카드에 나머지 카드 높이들도 맞춰짐 */}
                           <Card className="glass shadow-2xl backdrop-blur-md">
                             <CardHeader color="blue-gray" className="relative h-56">
-                              <img src={cardImages[key][i2]} alt="card-image" />
+                              <Image src={cardImages[key][i2]} width='480' height='480' priority={true}/>
                             </CardHeader>
                             <CardBody>
                               <Typography variant="h5" color="blue-gray" className="mb-2">
@@ -230,17 +232,14 @@ export default function StepperWithContent() {
                 ][i]
             )}
           </div>
-          {/* <div className="relative bottom-0 mb-32 w-full"> */}
           <div className="flex justify-between">
             <Button onClick={handlePrev} disabled={isFirstStep}>
               Prev
             </Button>
-            {/* <Cir /> */}
             <Button onClick={() => (isLastStep ? generateImages() : handleNext())} disabled={step?.[activeStep - 1] == -1 || !imgSrc}>
               {isLastStep ? '동화 만들기' : 'Next'}
             </Button>
           </div>
-          {/* </div> */}
         </div>
       </div>
     </div>
