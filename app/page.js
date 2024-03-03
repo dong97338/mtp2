@@ -183,7 +183,7 @@ export default function StepperWithContent() {
             {transitions(
               (style, i) =>
                 [
-                  <animated.div style={style} className="absolute left-0 right-0 m-auto w-max pb-16 [&_*]:rounded-lg">
+                  <animated.div style={style} className="absolute left-0 right-0 m-auto h-full w-max pb-16 [&_*]:rounded-lg">
                     <div className="aspect-[4/3] max-h-full overflow-hidden border-4 border-dashed border-gray-400">
                       {' '}
                       {/*overflow-hidden이 640, 축소비율 조건 만족*/}
