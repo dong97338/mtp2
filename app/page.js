@@ -4,7 +4,8 @@ import {useCallback, useRef, useState} from 'react'
 import {useRouter} from 'next/navigation'
 import {CardHeader, CardBody, CardFooter, Stepper, Step, Button, Typography, Card} from '@material-tailwind/react'
 import {CameraIcon, UserIcon, PaintBrushIcon, VideoCameraIcon, ArrowDownIcon} from '@heroicons/react/24/outline'
-import {useSpring, animated, useChain} from 'react-spring' //npm install react-spring@8.0.27: https://stackoverflow.com/a/66802388
+// import {useSpring, animated, useChain} from 'react-spring' //npm install react-spring@8.0.27: https://stackoverflow.com/a/66802388
+import {useSpring, animated, useTransition} from '@react-spring/web'
 import {motion} from 'framer-motion'
 import Webcam from 'react-webcam'
 
@@ -12,8 +13,8 @@ const db = {story: ['원령공주 이야기', '팀플스토리', '긱사네컷']
 const cardImages = {story: ['/지브리.png', '/팀플스토리.png', '/긱사네컷.png'], gender: ['/팀플스토리.png', '/지브리.png']}
 const details = {
   '원령공주 이야기': '지브리의 원령공주 속으로 들어가, 신비로운 늑대를 만나, 함께 마음껏 달려보세요',
-  '팀플스토리': '토이스토리 스타일 주인공이 되어, 주변 캐릭터와 팀플하는 이야기',
-  '긱사네컷': '내가 해리포터 영화 속 주인공이라면? 나랑 어울리는 호그와트 기숙사는 어디일지 알아보세요.'
+  팀플스토리: '토이스토리 스타일 주인공이 되어, 주변 캐릭터와 팀플하는 이야기',
+  긱사네컷: '내가 해리포터 영화 속 주인공이라면? 나랑 어울리는 호그와트 기숙사는 어디일지 알아보세요.'
 }
 const dummy = 'The place is close to Barceloneta Beach and bus stop just 2 min by walk and near to &quot;Naviglio&quot; where you can enjoy the main night life in Barcelona.'
 const steps = [
@@ -64,6 +65,7 @@ const InteractiveCard = ({children, className}) => {
 
 export default function StepperWithContent() {
   const [activeStep, setActiveStep] = useState(0)
+  const [prevStep, setPrevStep] = useState(0) // 방향 상태를 관리하려면 setActiveStep(cur=>(setDirection(cur<i?1:-1),i)) 이렇게 복잡해짐
   const [isLastStep, setIsLastStep] = useState(false)
   const [isFirstStep, setIsFirstStep] = useState(false)
   const [step, setStep] = useState(new Array(db.count).fill(-1)) // [스토리/장르, 성별]
@@ -78,8 +80,8 @@ export default function StepperWithContent() {
   const capture = useCallback(() => setImgSrc(webcamRef.current.getScreenshot({width: 640, height: 480})), [webcamRef])
 
   const url = endpoint => `/api/${endpoint}`
-  const handleNext = () => !isLastStep && setActiveStep(cur => cur + 1)
-  const handlePrev = () => !isFirstStep && setActiveStep(cur => cur - 1)
+  const handleNext = () => !isLastStep && (setPrevStep(activeStep), setActiveStep(cur => cur + 1))
+  const handlePrev = () => !isFirstStep && (setPrevStep(activeStep), setActiveStep(cur => cur - 1))
   const generateImages = async () => {
     router.push('/loading')
     const formData = new FormData()
@@ -112,6 +114,14 @@ export default function StepperWithContent() {
       }
     }, 1000)
   }
+
+  const transitions = useTransition(activeStep, {
+    keys: null,
+    from: {opacity: 0, transform: `translate3d(${prevStep < activeStep ? 100 : -100}%,0,0)`},
+    enter: {opacity: 1, transform: 'translate3d(0%,0,0)'},
+    leave: {opacity: 0, transform: `translate3d(${prevStep < activeStep ? -100 : 100}%,0,0)`}
+  })
+
   const [isUp, setIsUp] = useState(false)
 
   const draw = {
@@ -150,11 +160,11 @@ export default function StepperWithContent() {
 
   return (
     <div className="h-screen w-full p-12" style={{backgroundImage: `url(${backgroundImages[index]})`, backgroundSize: 'cover', transition: '0.5s ease-out'}}>
-      <div className="glass shadow-2xl backdrop-blur-md">
-        <div className="w-full px-24 py-4">
+      <div className="glass h-full shadow-2xl backdrop-blur-md">
+        <div className=" flex h-full w-full  flex-col px-24 py-4">
           <Stepper activeStep={activeStep} isLastStep={setIsLastStep} isFirstStep={setIsFirstStep}>
             {steps.map(([Icon, str], i) => (
-              <Step key={i} onClick={() => setActiveStep(i)}>
+              <Step key={i} onClick={() => (setPrevStep(activeStep), setActiveStep(i))}>
                 <Icon className="size-5" />
                 <div className="absolute -bottom-[4.5rem] w-max text-center">
                   <Typography variant="h6" color={activeStep === i ? 'blue-gray' : 'gray'}>
@@ -167,54 +177,61 @@ export default function StepperWithContent() {
               </Step>
             ))}
           </Stepper>
-          <div className="mt-24">
-            {activeStep == 0 && (
-              <div className="mx-auto w-fit [&_*]:rounded-lg">
-                <div className="aspect-[4/3] overflow-hidden border-4 border-dashed border-gray-400">
-                  {' '}
-                  {/*overflow-hidden이 640, 축소비율 조건 만족*/}
-                  {!imgSrc && !webcamLoaded && (
-                    <div className="grid h-full animate-pulse bg-gray-300">
-                      <VideoCameraIcon className="m-auto size-24 text-gray-500" strokeWidth={2} />
+          <div className="relative mt-24 grow">
+            {transitions(
+              (style, i) =>
+                [
+                  <animated.div style={style} className="absolute left-0 right-0 m-auto w-max [&_*]:rounded-lg">
+                    <div className="aspect-[4/3] overflow-hidden border-4 border-dashed border-gray-400">
+                      {' '}
+                      {/*overflow-hidden이 640, 축소비율 조건 만족*/}
+                      {!imgSrc && !webcamLoaded && (
+                        <div className="grid h-full animate-pulse bg-gray-300">
+                          <VideoCameraIcon className="m-auto size-24 text-gray-500" strokeWidth={2} />
+                        </div>
+                      )}
+                      {imgSrc ? <img src={imgSrc} /> : <Webcam ref={webcamRef} height={480} width={640} screenshotFormat="image/jpeg" onUserMedia={() => setWebcamLoaded(true)} />}
                     </div>
-                  )}
-                  {imgSrc ? <img src={imgSrc} /> : <Webcam ref={webcamRef} height={480} width={640} screenshotFormat="image/jpeg" onUserMedia={() => setWebcamLoaded(true)} />}
-                </div>
-                <Button className="float-right mt-4" onClick={imgSrc ? () => (setImgSrc(null), setWebcamLoaded(false)) : capture}>
-                  {imgSrc ? '다시 찍기' : 'Capture'}
-                </Button>
-              </div>
-            )}
-            {Object.entries(db).map(
-              ([key, li], i1) =>
-                activeStep == i1 + 1 && (
-                  <div className="flex justify-center p-4">
-                    {li.map((str, i2) => (
-                      <InteractiveCard className="mx-auto mt-6 grid w-96">
-                        {/* grid를 하면 가장 높은 카드에 나머지 카드 높이들도 맞춰짐 */}
-                        <Card className="glass shadow-2xl backdrop-blur-md">
-                          <CardHeader color="blue-gray" className="relative h-56">
-                            <img src={cardImages[key][i2]} alt="card-image" />
-                          </CardHeader>
-                          <CardBody>
-                            <Typography variant="h5" color="blue-gray" className="mb-2">
-                              {str}
-                            </Typography>
-                            <Typography>{details[str] || dummy}</Typography>
-                          </CardBody>
-                          <CardFooter className="pt-0">
-                            <Button key={`${i1}${i2}`} onClick={() => setStep({...step, [i1]: i2})} onMouseEnter={() => setIndex(i2 + 1)} color={step[i1] == i2 ? 'blue' : 'gray'}>
-                              {str}
-                            </Button>
-                          </CardFooter>
-                        </Card>
-                      </InteractiveCard>
-                    ))}
-                  </div>
-                )
+                    <div>
+                      <Button className="float-right mt-4" onClick={imgSrc ? () => (setImgSrc(null), setWebcamLoaded(false)) : capture}>
+                        {imgSrc ? '다시 찍기' : 'Capture'}
+                      </Button>
+                    </div>
+                  </animated.div>,
+                  ...Object.entries(db).map(([key, li], i1) => (
+                    <animated.div style={style} className="absolute left-0 right-0 m-auto flex w-full justify-center p-4">
+                      {li.map((str, i2) => (
+                        <InteractiveCard className="mx-auto mt-6 grid w-96">
+                          {/* grid를 하면 가장 높은 카드에 나머지 카드 높이들도 맞춰짐 */}
+                          <Card className="glass shadow-2xl backdrop-blur-md">
+                            <CardHeader color="blue-gray" className="relative h-56">
+                              <img src={cardImages[key][i2]} alt="card-image" />
+                            </CardHeader>
+                            <CardBody>
+                              <Typography variant="h5" color="blue-gray" className="mb-2">
+                                {str}
+                              </Typography>
+                              <Typography>{details[str] || dummy}</Typography>
+                            </CardBody>
+                            <CardFooter className="pt-0">
+                              <Button
+                                key={`${i1}${i2}`}
+                                onClick={() => setStep({...step, [i1]: i2})}
+                                onMouseEnter={() => setIndex(i2 + 1)}
+                                color={step[i1] == i2 ? 'blue' : 'gray'}>
+                                {str}
+                              </Button>
+                            </CardFooter>
+                          </Card>
+                        </InteractiveCard>
+                      ))}
+                    </animated.div>
+                  ))
+                ][i]
             )}
           </div>
-          <div className="mt-32 flex justify-between">
+          {/* <div className="relative bottom-0 mb-32 w-full"> */}
+          <div className="flex justify-between">
             <Button onClick={handlePrev} disabled={isFirstStep}>
               Prev
             </Button>
@@ -223,6 +240,7 @@ export default function StepperWithContent() {
               {isLastStep ? '동화 만들기' : 'Next'}
             </Button>
           </div>
+          {/* </div> */}
         </div>
       </div>
     </div>

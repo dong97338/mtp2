@@ -11,6 +11,7 @@
   "dependencies": {
     "@heroicons/react": "^2.1.1",
     "@material-tailwind/react": "^2.1.8",
+    "@react-spring/web": "^9.7.3",
     "@splinetool/runtime": "^1.0.46",
     "autoprefixer": "10.4.16",
     "eslint": "8.56.0",
