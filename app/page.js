@@ -183,8 +183,8 @@ export default function StepperWithContent() {
             {transitions(
               (style, i) =>
                 [
-                  <animated.div style={style} className="absolute left-0 right-0 m-auto w-max [&_*]:rounded-lg">
-                    <div className="aspect-[4/3] overflow-hidden border-4 border-dashed border-gray-400">
+                  <animated.div style={style} className="absolute left-0 right-0 m-auto w-max pb-16 [&_*]:rounded-lg">
+                    <div className="aspect-[4/3] max-h-full overflow-hidden border-4 border-dashed border-gray-400">
                       {' '}
                       {/*overflow-hidden이 640, 축소비율 조건 만족*/}
                       {!imgSrc && !webcamLoaded && (
@@ -207,7 +207,7 @@ export default function StepperWithContent() {
                           {/* grid를 하면 가장 높은 카드에 나머지 카드 높이들도 맞춰짐 */}
                           <Card className="glass shadow-2xl backdrop-blur-md">
                             <CardHeader color="blue-gray" className="relative h-56">
-                              <Image src={cardImages[key][i2]} width='480' height='480' priority={true}/>
+                              <Image src={cardImages[key][i2]} width="480" height="480" priority={true} />
                             </CardHeader>
                             <CardBody>
                               <Typography variant="h5" color="blue-gray" className="mb-2">
