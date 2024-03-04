@@ -208,7 +208,7 @@ export default function StepperWithContent() {
                           {/* grid를 하면 가장 높은 카드에 나머지 카드 높이들도 맞춰짐 */}
                           <Card className="glass shadow-2xl backdrop-blur-md">
                             <CardHeader color="blue-gray" className="relative h-56">
-                              <CardImage i1={key} i2={i2}/>
+                              <Image src={CardImage[key][i2]} alt="card-image" layout="fill" objectFit="cover" priority />
                             </CardHeader>
                             <CardBody>
                               <Typography variant="h5" color="blue-gray" className="mb-2">
