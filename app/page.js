@@ -8,6 +8,7 @@ import {CameraIcon, UserIcon, PaintBrushIcon, VideoCameraIcon, ArrowDownIcon} fr
 // import {useSpring, animated, useChain} from 'react-spring' //npm install react-spring@8.0.27: https://stackoverflow.com/a/66802388
 import {useSpring, animated, useTransition} from '@react-spring/web'
 import {motion} from 'framer-motion'
+import { CardImage } from '@/public/images'
 import Webcam from 'react-webcam'
 
 const db = {story: ['원령공주 이야기', '팀플스토리', '긱사네컷'], gender: ['남자', '여자']}
@@ -207,7 +208,7 @@ export default function StepperWithContent() {
                           {/* grid를 하면 가장 높은 카드에 나머지 카드 높이들도 맞춰짐 */}
                           <Card className="glass shadow-2xl backdrop-blur-md">
                             <CardHeader color="blue-gray" className="relative h-56">
-                              <Image src={cardImages[key][i2]} width="480" height="480" priority={true} />
+                              <CardImage i1={key} i2={i2}/>
                             </CardHeader>
                             <CardBody>
                               <Typography variant="h5" color="blue-gray" className="mb-2">
